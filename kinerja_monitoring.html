@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Interaktif Bento Grid</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            body { background: white !important; padding: 0 !important; }
+            .no-print { display: none !important; }
+            .shadow-sm, .shadow-2xl, .shadow-lg, .shadow-md, .shadow-xl { box-shadow: none !important; }
+            .border { border-color: #cbd5e1 !important; }
+            .page-break { page-break-inside: avoid; }
+        }
+        .last-update-box {
+            display: inline-block;
+            text-align: center;
+            color: #00aaff;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1.25;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans pb-6">
+
+    <header class="bg-[#044438] text-white shadow-md no-print sticky top-0 z-40 mb-6">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-[#0d5d4d] rounded-xl flex items-center justify-center text-emerald-300 border border-emerald-500/30">
+                    <i class="fa-solid fa-chart-line text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-base md:text-lg font-bold tracking-tight text-white leading-tight">
+                        Monev Per Triwulan Disnakerkop UKM
+                    </h1>
+                    <p class="text-xs text-emerald-200/70">
+                        Kabupaten Belitung Timur • Tahun Anggaran 2026
+                    </p>
+                </div>
+            </div>
+                <nav class="bg-[#022b23] p-1 rounded-xl flex items-center gap-1 border border-emerald-900">
+                    <a href="<?= getScriptUrl(); ?>?page=Index" class="text-emerald-200 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-bars text-emerald-400"></i> Menu
+                    </a>
+                    <a href="<?= getScriptUrl(); ?>?page=kinerja_monitoring" class="bg-white text-slate-900 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition">
+                        <i class="fa-solid fa-chart-line text-emerald-700"></i> Kinerja dan Monitoring
+                    </a>
+                    <a href="<?= getScriptUrl(); ?>?page=pupa" class="text-emerald-200 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-file-invoice"></i> PU/PA
+                    </a>
+                    <a href="#About" class="text-emerald-200 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-layer-group"></i> About
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto space-y-6 px-4 md:px-6">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <div class="space-y-4 w-full md:w-auto">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900">Dashboard Kinerja & Monitoring</h1>
+                    <p class="text-slate-500 text-sm">Evaluasi dan Pengelolaan Data Pelatihan & Penempatan Tenaga Kerja, Hubungan Industrial, dan Koperasi UKM Disnakerkopukm Kab. Belitung Timur</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-2 no-print shrink-0">
+                <div class="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium border border-slate-300 flex items-center gap-2">
+                    <i class="fa-regular fa-calendar text-indigo-600"></i> Periode Tahun : 2026
+                </div>
+            </div>
+        </div>
+
+        <!-- Bento Grid Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 page-break">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 border-l-2 border-l-indigo-600 shadow-sm flex flex-col justify-between transition transform duration-200 hover:-translate-y-1 hover:shadow-lg">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Indikator</span>
+                    <span class="p-2 bg-indigo-50 text-indigo-600 rounded-lg"><i class="fa-solid fa-list-check"></i></span>
+                </div>
+                <div class="mt-4">
+                    <span id="stat-total" class="text-3xl font-extrabold text-slate-900">0</span>
+                    <span class="text-xs text-slate-400 block mt-1">Indikator terdaftar</span>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 border-l-2 border-l-emerald-600 shadow-sm flex flex-col justify-between transition transform duration-200 hover:-translate-y-1 hover:shadow-lg">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Rata-Rata Capaian</span>
+                    <span class="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><i class="fa-solid fa-chart-line"></i></span>
+                </div>
+                <div class="mt-4">
+                    <span id="stat-capaian" class="text-3xl font-extrabold text-emerald-600">0%</span>
+                    <span class="text-xs text-slate-400 block mt-1">Total Realisasi vs Target</span>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 border-l-2 border-l-blue-600 shadow-sm flex flex-col justify-between transition transform duration-200 hover:-translate-y-1 hover:shadow-lg">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Terverifikasi</span>
+                    <span class="p-2 bg-blue-50 text-blue-600 rounded-lg"><i class="fa-solid fa-circle-check"></i></span>
+                </div>
+                <div class="mt-4">
+                    <span id="stat-verified" class="text-3xl font-extrabold text-blue-600">0</span>
+                    <span class="text-xs text-slate-400 block mt-1">Data tervalidasi</span>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 border-l-2 border-l-amber-500 shadow-sm flex flex-col justify-between transition transform duration-200 hover:-translate-y-1 hover:shadow-lg">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Perlu Perhatian</span>
+                    <span class="p-2 bg-amber-50 text-amber-600 rounded-lg"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                </div>
+                <div class="mt-4">
+                    <span id="stat-pending" class="text-3xl font-extrabold text-amber-500">0</span>
+                    <span class="text-xs text-slate-400 block mt-1">Revisi / Belum Verifikasi</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Last Update Cards per Bidang -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 page-break">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Update Terakhir Bidang</span>
+                    <h4 class="text-xs font-bold text-slate-800 mt-0.5">Pelatihan & Penempatan Tenaga Kerja</h4>
+                    <span id="update-bidang-1" class="text-xs font-semibold text-sky-600 mt-1 block">-</span>
+                </div>
+                <div class="p-2.5 bg-sky-50 text-sky-600 rounded-xl">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Update Terakhir Bidang</span>
+                    <h4 class="text-xs font-bold text-slate-800 mt-0.5">Hubungan Industrial & Jamsostek</h4>
+                    <span id="update-bidang-2" class="text-xs font-semibold text-sky-600 mt-1 block">-</span>
+                </div>
+                <div class="p-2.5 bg-sky-50 text-sky-600 rounded-xl">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Update Terakhir Bidang</span>
+                    <h4 class="text-xs font-bold text-slate-800 mt-0.5">Koperasi & UKM</h4>
+                    <span id="update-bidang-3" class="text-xs font-semibold text-sky-600 mt-1 block">-</span>
+                </div>
+                <div class="p-2.5 bg-sky-50 text-sky-600 rounded-xl">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col lg:flex-row gap-4 justify-between items-center no-print">
+            <div class="relative w-full lg:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" oninput="handleFilterChange()" placeholder="Cari Indikator atau PIC Bidang..." class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            
+            <div class="flex flex-wrap lg:flex-nowrap gap-3 w-full lg:w-auto items-center">
+                <select id="filterBidang" onchange="handleFilterChange()" class="w-full lg:w-auto bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Semua Bidang (PIC)</option>
+                    <option value="Bidang Pelatihan dan Penempatan Tenaga Kerja">Pelatihan & Penempatan Tenaga Kerja</option>
+                    <option value="Bidang Hubungan Industrial dan Jamsostek">Hubungan Industrial & Jamsostek</option>
+                    <option value="Bidang Koperasi dan UKM">Koperasi & UKM</option>
+                </select>
+
+                <select id="filterStatus" onchange="handleFilterChange()" class="w-full lg:w-auto bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Semua Status</option>
+                    <option value="Verifikasi">Verifikasi</option>
+                    <option value="Belum Verifikasi">Belum Verifikasi</option>
+                    <option value="Revisi">Revisi</option>
+                </select>
+
+                <select id="rowsPerPage" onchange="handleRowsPerPageChange()" class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500">
+                    <option value="5">5 baris</option>
+                    <option value="10" selected>10 baris</option>
+                    <option value="25">25 baris</option>
+                </select>
+
+                <button onclick="openModal()" class="w-full lg:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center justify-center gap-2 shadow-md shadow-indigo-100 whitespace-nowrap">
+                    <i class="fa-solid fa-plus"></i> Tambah Data Indikator
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden page-break">
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left text-slate-600 border-collapse">
+                    <thead class="text-[10px] text-slate-700 uppercase bg-slate-200 border-b border-slate-300">
+                        <tr>
+                            <th rowspan="2" class="px-2 py-2 text-center border-r border-slate-300">No</th>
+                            <th rowspan="2" class="px-3 py-2 text-center border-r border-slate-300 min-w-[180px]">Indikator</th>
+                            <th rowspan="2" class="px-2 py-2 text-center border-r border-slate-300">Satuan</th>
+                            <th rowspan="2" class="px-3 py-2 text-center border-r border-slate-300">PIC Bidang</th>
+                            <th rowspan="2" class="px-3 py-2 text-center border-r border-slate-300 bg-slate-300/70 text-slate-800 min-w-[100px]">Baseline 2025</th>
+                            <th rowspan="2" class="px-3 py-2 text-center border-r border-slate-300 bg-slate-300/50 text-slate-900 font-bold min-w-[90px]">Target</th>
+                            <th colspan="5" class="px-2 py-1 text-center border-b border-r border-slate-300 bg-slate-300/60 text-slate-900">Realisasi</th>
+                            <th rowspan="2" class="px-3 py-2 text-center border-r border-slate-300 bg-slate-300/50 text-slate-900 font-bold min-w-[90px]">Capaian (%)</th>
+                            <th rowspan="2" class="px-2 py-2 text-center border-r border-slate-300">Status</th>
+                            <th rowspan="2" class="px-2 py-2 text-center no-print">Aksi</th>
+                        </tr>
+                        <tr class="bg-slate-200/80">
+                            <th class="px-1.5 py-1 text-center border-r border-slate-300">TW 1</th>
+                            <th class="px-1.5 py-1 text-center border-r border-slate-300">TW 2</th>
+                            <th class="px-1.5 py-1 text-center border-r border-slate-300">TW 3</th>
+                            <th class="px-1.5 py-1 text-center border-r border-slate-300">TW 4</th>
+                            <th class="px-1.5 py-1 text-center border-r border-slate-300 font-bold bg-slate-300/70">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="p-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 no-print bg-slate-50/50">
+                <span id="paginationInfo" class="text-xs text-slate-500">Menampilkan 0 dari 0 data</span>
+                <div class="flex items-center gap-1" id="paginationButtons"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="modalForm" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-lg font-bold text-slate-800">Tambah Data</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="formData" onsubmit="saveData(event)" class="space-y-4">
+                <input type="hidden" id="dataId">
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">PIC Bidang</label>
+                    <select id="picBidang" required class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                        <option value="Bidang Pelatihan dan Penempatan Tenaga Kerja">Bidang Pelatihan dan Penempatan Tenaga Kerja</option>
+                        <option value="Bidang Hubungan Industrial dan Jamsostek">Bidang Hubungan Industrial & Jamsostek</option>
+                        <option value="Bidang Koperasi dan UKM">Bidang Koperasi & UKM</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="col-span-2">
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Indikator</label>
+                        <input type="text" id="indikator" required placeholder="Nama Indikator" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Satuan</label>
+                        <input type="text" id="satuan" required placeholder="Contoh: Orang/UKM" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 border-t border-slate-100 pt-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Baseline 2025</label>
+                        <input type="text" inputmode="decimal" id="baseline" required placeholder="0" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Target</label>
+                        <input type="text" inputmode="decimal" id="target" required placeholder="0" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3">
+                    <label class="block text-xs font-bold text-slate-700 mb-2">Realisasi Per Triwulan</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <div>
+                            <label class="block text-[10px] text-slate-500">TW 1</label>
+                            <input type="text" inputmode="decimal" id="realisasiTw1" required placeholder="0" class="w-full border border-slate-200 rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500">TW 2</label>
+                            <input type="text" inputmode="decimal" id="realisasiTw2" required placeholder="0" class="w-full border border-slate-200 rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500">TW 3</label>
+                            <input type="text" inputmode="decimal" id="realisasiTw3" required placeholder="0" class="w-full border border-slate-200 rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500">TW 4</label>
+                            <input type="text" inputmode="decimal" id="realisasiTw4" required placeholder="0" class="w-full border border-slate-200 rounded-lg p-2 text-xs focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Status</label>
+                    <select id="status" required class="w-full border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                        <option value="Belum Verifikasi">Belum Verifikasi</option>
+                        <option value="Verifikasi">Verifikasi</option>
+                        <option value="Revisi">Revisi</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-4 border-t border-slate-100">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl text-sm hover:bg-slate-50">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm hover:bg-indigo-700">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let dataStore = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+
+        function formatLastUpdateHtml(lastUpdateStr) {
+            if (!lastUpdateStr) return '';
+            const parts = String(lastUpdateStr).trim().split(" ");
+            const datePart = parts[0] || '';
+            const timePart = parts[1] || '';
+            
+            if (!datePart) return '';
+
+            return `
+                <div class="last-update-box">
+                    ${datePart}<br>${timePart}
+                </div>
+            `;
+        }
+
+        function fetchSheetData() {
+            document.getElementById('tableBody').innerHTML = `
+                <tr>
+                    <td colspan="14" class="px-4 py-8 text-center text-slate-400">
+                        <i class="fa-solid fa-spinner fa-spin text-3xl mb-2 block text-indigo-600"></i>
+                        Memuat data dari Google Sheets...
+                    </td>
+                </tr>`;
+
+            google.script.run
+                .withSuccessHandler(function(data) {
+                    dataStore = data;
+                    renderTable();
+                })
+                .withFailureHandler(function(err) {
+                    alert('Gagal mengambil data dari Spreadsheet: ' + err.message);
+                })
+                .getDataFromSheet();
+        }
+
+        function getTargetVal(target) {
+            if (typeof target === 'number') return target;
+            if (target && target.total !== undefined) return target.total;
+            if (target) return (target.tw1 || 0) + (target.tw2 || 0) + (target.tw3 || 0) + (target.tw4 || 0);
+            return 0;
+        }
+
+        function getBaselineVal(item) {
+            if (item.baseline !== undefined) return item.baseline;
+            if (item.baseline2025 !== undefined) return item.baseline2025;
+            return 0;
+        }
+
+        function calculateCapaianTotal(realTotal, targetTotal) {
+            if (!targetTotal || targetTotal <= 0) return 0;
+            const res = (realTotal / targetTotal) * 100;
+            return isNaN(res) ? 0 : Number(res.toFixed(1));
+        }
+
+        function handleFilterChange() {
+            currentPage = 1;
+            renderTable();
+        }
+
+        function handleRowsPerPageChange() {
+            itemsPerPage = Number(document.getElementById('rowsPerPage').value);
+            currentPage = 1;
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filterBidang = document.getElementById('filterBidang').value;
+            const filterStatus = document.getElementById('filterStatus').value;
+
+            tbody.innerHTML = '';
+
+            const filteredData = dataStore.filter(item => {
+                const matchSearch = item.indikator.toLowerCase().includes(searchVal) || item.pic.toLowerCase().includes(searchVal);
+                const matchBidang = filterBidang === '' || item.pic === filterBidang;
+                const matchStatus = filterStatus === '' || item.status === filterStatus;
+                return matchSearch && matchBidang && matchStatus;
+            });
+
+            const totalItems = filteredData.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="14" class="px-4 py-8 text-center text-slate-400">
+                            <i class="fa-solid fa-inbox text-3xl mb-2 block"></i>
+                            Tidak ada data indikator yang sesuai.
+                        </td>
+                    </tr>`;
+            } else {
+                paginatedData.forEach((item, index) => {
+                    const tarTotal = getTargetVal(item.target);
+                    const baselineVal = getBaselineVal(item);
+                    const realTotal = item.realisasi.total !== undefined ? item.realisasi.total : (item.realisasi.tw1 + item.realisasi.tw2 + item.realisasi.tw3 + item.realisasi.tw4);
+                    
+                    const capTotal = calculateCapaianTotal(realTotal, tarTotal);
+                    const lastUpdateHtml = formatLastUpdateHtml(item.lastUpdate);
+
+                    let statusBadge = '';
+                    if(item.status === 'Verifikasi') statusBadge = 'bg-emerald-100 text-emerald-700 border-emerald-200';
+                    else if(item.status === 'Belum Verifikasi') statusBadge = 'bg-amber-100 text-amber-700 border-amber-200';
+                    else statusBadge = 'bg-rose-100 text-rose-700 border-rose-200';
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-slate-100 hover:bg-slate-50/50 transition';
+                    tr.innerHTML = `
+                        <td class="px-2 py-2 text-center font-medium text-slate-400 border-r border-slate-100">${startIndex + index + 1}</td>
+                        <td class="px-3 py-2 font-medium text-slate-800 border-r border-slate-100">${item.indikator} ${lastUpdateHtml}</td>
+                        <td class="px-2 py-2 text-slate-500 border-r border-slate-100">${item.satuan}</td>
+                        <td class="px-3 py-2 text-[10px] text-slate-500 border-r border-slate-100">${item.pic}</td>
+                        <td class="px-3 py-2 text-right text-slate-600 border-r border-slate-100">${baselineVal.toLocaleString()}</td>
+                        <td class="px-3 py-2 text-right font-bold text-slate-700 border-r border-slate-100 bg-slate-50">${tarTotal.toLocaleString()}</td>
+                        <td class="px-1.5 py-2 text-right text-slate-500 border-r border-slate-100">${item.realisasi.tw1.toLocaleString()}</td>
+                        <td class="px-1.5 py-2 text-right text-slate-500 border-r border-slate-100">${item.realisasi.tw2.toLocaleString()}</td>
+                        <td class="px-1.5 py-2 text-right text-slate-500 border-r border-slate-100">${item.realisasi.tw3.toLocaleString()}</td>
+                        <td class="px-1.5 py-2 text-right text-slate-500 border-r border-slate-100">${item.realisasi.tw4.toLocaleString()}</td>
+                        <td class="px-1.5 py-2 text-right font-bold text-slate-700 border-r border-slate-100 bg-slate-100">${realTotal.toLocaleString()}</td>
+                        <td class="px-3 py-2 text-right font-bold text-slate-700 border-r border-slate-100 bg-slate-50 text-sm">${capTotal}%</td>
+                        <td class="px-2 py-2 text-center border-r border-slate-100">
+                            <span class="px-2 py-0.5 text-[9px] rounded-full border ${statusBadge} font-medium">${item.status}</span>
+                        </td>
+                        <td class="px-2 py-2 text-center space-x-1 no-print">
+                            <button onclick="editData(${item.id})" class="p-1 text-slate-400 hover:text-indigo-600 transition" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteData(${item.id})" class="p-1 text-slate-400 hover:text-rose-600 transition" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            updateCards(filteredData);
+            updateLastUpdateCards();
+            renderPaginationControls(totalItems, totalPages);
+        }
+
+        function updateLastUpdateCards() {
+            const bidangList = [
+                { name: "Bidang Pelatihan dan Penempatan Tenaga Kerja", elementId: "update-bidang-1" },
+                { name: "Bidang Hubungan Industrial dan Jamsostek", elementId: "update-bidang-2" },
+                { name: "Bidang Koperasi dan UKM", elementId: "update-bidang-3" }
+            ];
+
+            const now = new Date(); // Waktu saat ini (2026)
+
+            bidangList.forEach(bidang => {
+                const el = document.getElementById(bidang.elementId);
+                if (!el) return;
+
+                const bidangData = dataStore.filter(d => d.pic === bidang.name && d.lastUpdate && String(d.lastUpdate).trim() !== "");
+
+                if (bidangData.length > 0) {
+                    bidangData.sort((a, b) => {
+                        const parseDateStr = (str) => {
+                            if (!str) return 0;
+                            const parts = str.trim().split(" ");
+                            if (parts.length < 1) return 0;
+                            const dateParts = parts[0].split("-");
+                            if (dateParts.length !== 3) return new Date(str).getTime() || 0;
+                            const isoStr = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]} ${parts[1] || '00:00:00'}`;
+                            return new Date(isoStr).getTime() || 0;
+                        };
+
+                        const timeA = parseDateStr(a.lastUpdate);
+                        const timeB = parseDateStr(b.lastUpdate);
+                        return timeB - timeA;
+                    });
+
+                    const latestUpdateStr = bidangData[0].lastUpdate;
+                    
+                    const parseDateObj = (str) => {
+                        const parts = str.trim().split(" ");
+                        const dateParts = parts[0].split("-");
+                        if (dateParts.length !== 3) return new Date(str);
+                        return new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]} ${parts[1] || '00:00:00'}`);
+                    };
+
+                    const lastUpdateDate = parseDateObj(latestUpdateStr);
+                    const diffTime = now - lastUpdateDate;
+                    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+                    let warningHtml = "";
+                    if (diffDays > 90) {
+                        warningHtml = `<span class="text-[10px] text-rose-500 font-bold block mt-0.5"><i class="fa-solid fa-triangle-exclamation"></i> Segera update data anda</span>`;
+                    } else {
+                        warningHtml = `<span class="text-[10px] text-emerald-600 font-medium block mt-0.5"><i class="fa-solid fa-circle-check"></i> Status: Aktif / Terbarui</span>`;
+                    }
+
+                    el.innerHTML = `${latestUpdateStr} ${warningHtml}`;
+                } else {
+                    el.innerHTML = `Belum ada update <span class="text-[10px] text-rose-500 font-bold block mt-0.5"><i class="fa-solid fa-triangle-exclamation"></i> Segera update data anda</span>`;
+                }
+            });
+        }
+
+        function renderPaginationControls(totalItems, totalPages) {
+            const paginationInfo = document.getElementById('paginationInfo');
+            const paginationButtons = document.getElementById('paginationButtons');
+
+            const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+            paginationInfo.innerText = `Menampilkan ${startItem} - ${endItem} dari ${totalItems} data`;
+            paginationButtons.innerHTML = '';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.className = `px-3 py-1.5 text-xs rounded-lg border border-slate-200 transition ${currentPage === 1 ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400' : 'hover:bg-slate-100 text-slate-600'}`;
+            prevBtn.innerHTML = `<i class="fa-solid fa-chevron-left"></i>`;
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => { if(currentPage > 1) { currentPage--; renderTable(); } };
+            paginationButtons.appendChild(prevBtn);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `px-3 py-1.5 text-xs rounded-lg border font-medium transition ${i === currentPage ? 'bg-indigo-600 text-white border-indigo-600' : 'border-slate-200 hover:bg-slate-100 text-slate-600'}`;
+                pageBtn.innerText = i;
+                pageBtn.onclick = () => { currentPage = i; renderTable(); };
+                paginationButtons.appendChild(pageBtn);
+            }
+
+            const nextBtn = document.createElement('button');
+            nextBtn.className = `px-3 py-1.5 text-xs rounded-lg border border-slate-200 transition ${currentPage === totalPages || totalItems === 0 ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400' : 'hover:bg-slate-100 text-slate-600'}`;
+            nextBtn.innerHTML = `<i class="fa-solid fa-chevron-right"></i>`;
+            nextBtn.disabled = currentPage === totalPages || totalItems === 0;
+            nextBtn.onclick = () => { if(currentPage < totalPages) { currentPage++; renderTable(); } };
+            paginationButtons.appendChild(nextBtn);
+        }
+
+        function updateCards(data) {
+            document.getElementById('stat-total').innerText = data.length;
+            
+            const totalCapaian = data.reduce((acc, curr) => {
+                const tarTotal = getTargetVal(curr.target);
+                const realTotal = curr.realisasi.total !== undefined ? curr.realisasi.total : (curr.realisasi.tw1 + curr.realisasi.tw2 + curr.realisasi.tw3 + curr.realisasi.tw4);
+                return acc + calculateCapaianTotal(realTotal, tarTotal);
+            }, 0);
+            
+            const avgCapaian = data.length ? (totalCapaian / data.length).toFixed(1) : 0;
+            document.getElementById('stat-capaian').innerText = `${avgCapaian}%`;
+
+            const verified = data.filter(d => d.status === 'Verifikasi').length;
+            const pending = data.filter(d => d.status !== 'Verifikasi').length;
+
+            document.getElementById('stat-verified').innerText = verified;
+            document.getElementById('stat-pending').innerText = pending;
+        }
+
+        function openModal(isEdit = false) {
+            document.getElementById('modalTitle').innerText = isEdit ? 'Edit Data Indikator' : 'Tambah Data Indikator';
+            document.getElementById('modalForm').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modalForm').classList.add('hidden');
+            document.getElementById('formData').reset();
+            document.getElementById('dataId').value = '';
+        }
+
+        function parseNumberInput(value) {
+            if (!value) return 0;
+            const cleaned = String(value).trim().replace(/\./g, '').replace(',', '.');
+            const num = Number(cleaned);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function saveData(e) {
+            e.preventDefault();
+            const id = document.getElementById('dataId').value;
+            const pic = document.getElementById('picBidang').value;
+            const indikator = document.getElementById('indikator').value.trim();
+            const satuan = document.getElementById('satuan').value.trim();
+            
+            const baseline = parseNumberInput(document.getElementById('baseline').value);
+            const target = parseNumberInput(document.getElementById('target').value);
+            const status = document.getElementById('status').value;
+
+            const r1 = parseNumberInput(document.getElementById('realisasiTw1').value);
+            const r2 = parseNumberInput(document.getElementById('realisasiTw2').value);
+            const r3 = parseNumberInput(document.getElementById('realisasiTw3').value);
+            const r4 = parseNumberInput(document.getElementById('realisasiTw4').value);
+            const rTot = Number((r1 + r2 + r3 + r4).toFixed(2));
+
+            const cTot = calculateCapaianTotal(rTot, target);
+
+            if (target < 0 || baseline < 0) {
+                alert('Nilai Baseline dan Target tidak boleh bernilai negatif!');
+                return;
+            }
+
+            if (rTot < 0 || r1 < 0 || r2 < 0 || r3 < 0 || r4 < 0) {
+                alert('Nilai Realisasi tidak boleh bernilai negatif!');
+                return;
+            }
+
+            const itemData = {
+                id: id ? Number(id) : Date.now(),
+                pic: pic,
+                indikator: indikator,
+                satuan: satuan,
+                baseline: baseline,
+                target: target,
+                realisasi: { tw1: r1, tw2: r2, tw3: r3, tw4: r4, total: rTot },
+                capaian: cTot,
+                status: status
+            };
+
+            google.script.run
+                .withSuccessHandler(function() {
+                    closeModal();
+                    fetchSheetData();
+                })
+                .withFailureHandler(function(err) {
+                    alert('Gagal menyimpan data ke Spreadsheet: ' + err.message);
+                })
+                .saveDataToSheet(itemData);
+        }
+
+        function editData(id) {
+            const item = dataStore.find(d => d.id === id);
+            if (item) {
+                document.getElementById('dataId').value = item.id;
+                document.getElementById('picBidang').value = item.pic;
+                document.getElementById('indikator').value = item.indikator;
+                document.getElementById('satuan').value = item.satuan;
+                document.getElementById('baseline').value = getBaselineVal(item);
+                document.getElementById('target').value = getTargetVal(item.target);
+                document.getElementById('status').value = item.status;
+
+                document.getElementById('realisasiTw1').value = item.realisasi.tw1 !== undefined ? item.realisasi.tw1 : 0;
+                document.getElementById('realisasiTw2').value = item.realisasi.tw2 !== undefined ? item.realisasi.tw2 : 0;
+                document.getElementById('realisasiTw3').value = item.realisasi.tw3 !== undefined ? item.realisasi.tw3 : 0;
+                document.getElementById('realisasiTw4').value = item.realisasi.tw4 !== undefined ? item.realisasi.tw4 : 0;
+                
+                openModal(true);
+            }
+        }
+
+        function deleteData(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus data indikator ini?')) {
+                google.script.run
+                    .withSuccessHandler(function() {
+                        fetchSheetData();
+                    })
+                    .withFailureHandler(function(err) {
+                        alert('Gagal menghapus data dari Spreadsheet: ' + err.message);
+                    })
+                    .deleteDataFromSheet(id);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        fetchSheetData();
+    </script>
+</body>
+</html>
